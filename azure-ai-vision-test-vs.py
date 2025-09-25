@@ -101,13 +101,13 @@ def move_servo(angle):
 #######################
 
 # Initialize the webcam
-cap = cv2.VideoCapture(1)  # 1 is the index of the usb attached camera (0 is the built-in camera)
+cap = cv2.VideoCapture(0)  # 0 is the index of the usb attached camera (1 is the built-in camera)
 
-#Check if the camera opened successfully
+# Check if the camera opened successfully
 if not cap.isOpened():
     raise IOError("Cannot open webcam - make sure it is attached")
 
-#Create a window named "Webcam Feed" to display what the webcam is seeing on to the console
+# Create a window named "Webcam Feed" to display what the webcam is seeing on to the console
 cv2.namedWindow("Webcam Feed")
 
 # Call the capture frame function here
@@ -125,27 +125,14 @@ uploaded_file_url = upload_blob(img_file, container_name, blob_name)
 print("\nUploaded file URL in Azure is: ", uploaded_file_url)
 
 # Analyze the image...
-# First let's check the main (dominant) color...
-# Create a Computer Vision client to talk to the Azure service
-cv_client = ComputerVisionClient(config.az_endpoint, CognitiveServicesCredentials(config.key))
-features = ["Color", "Objects"]
-analysis = cv_client.analyze_image(uploaded_file_url, visual_features=features)
 
-# Print dominant colors
-print("\nDominant Colors found in this image include: ", analysis.color.dominant_colors)
-
-# Print detected objects
-for obj in analysis.objects:
-    print(f"\nObjects detected in the image: {obj.object_property}, Confidence: {obj.confidence}")
-
-
-# Now create an Image Analysis client to talk to a different Azure service
+# Create an Image Analysis client to talk to the Azure Vision API service
 ia_client = ImageAnalysisClient(
     endpoint=config.az_endpoint,
     credential=AzureKeyCredential(config.key)
 )
 
-# Get a caption for the image.
+# Analyze the image.
 result = ia_client.analyze_from_url(
     image_url=uploaded_file_url,
     visual_features=[VisualFeatures.CAPTION, VisualFeatures.READ],
@@ -161,9 +148,7 @@ if result.caption is not None:
 print("\nText found in the image (if any): ")
 if result.read.blocks:
     for line in result.read.blocks[0].lines:
-        print(f"   Line: '{line.text}', Bounding box {line.bounding_polygon}")
-        for word in line.words:
-            print(f"     Word: '{word.text}', Bounding polygon {word.bounding_polygon}, Confidence {word.confidence:.4f}")
+        print(f"   Line: '{line.text}'")
 
 
 # Open the serial port for the Arduino attached servo motors...
