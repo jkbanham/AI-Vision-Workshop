@@ -142,13 +142,13 @@ result = ia_client.analyze_from_url(
 # Print caption results to the console
 print("\nImage Analysis result returned this caption: ")
 if result.caption is not None:
-    print(f"   '{result.caption.text}', Confidence {result.caption.confidence:.4f}")
+    print(f"   '{result.caption.text}'")
 
 # Print text (OCR) analysis results to the console
 print("\nText found in the image (if any): ")
 if result.read.blocks:
     for line in result.read.blocks[0].lines:
-        print(f"   Line: '{line.text}'")
+        print(f"   '{line.text}'")
 
 
 # Open the serial port for the Arduino attached servo motors...
