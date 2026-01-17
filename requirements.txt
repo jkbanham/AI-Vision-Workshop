@@ -18,10 +18,10 @@ oauthlib==3.3.1
 opencv-python==4.12.0.88
 pillow==12.0.0
 pycparser==2.23
+pyserial==3.5.0
 PyYAML==6.0.3
 requests==2.32.5
 requests-oauthlib==2.0.0
-serial==0.0.97
 typing_extensions==4.15.0
 urllib3==2.5.0
 webcolors==24.11.1
